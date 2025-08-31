@@ -40,7 +40,7 @@ export default function Home() {
               Elevate Your <span className="text-gradient">Digital Experience</span>
             </h2>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Where Zen meets Ascension. We deliver clean, efficient, and scalable software solutions 
+              We deliver clean, efficient, and scalable software solutions 
               that transform the way businesses operate in the digital space.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -270,20 +270,20 @@ export default function Home() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
                     <Mail className="h-6 w-6 text-blue-600" />
-                    <span className="text-gray-700">hello@zenscend.tech</span>
+                    <span className="text-gray-700">bongani@zenscend.co</span>
                   </div>
-                  <div className="flex items-center gap-4">
+                  {/* <div className="flex items-center gap-4">
                     <Phone className="h-6 w-6 text-blue-600" />
                     <span className="text-gray-700">+1 (555) 123-4567</span>
-                  </div>
+                  </div> */}
                   <div className="flex items-center gap-4">
                     <MapPin className="h-6 w-6 text-blue-600" />
-                    <span className="text-gray-700">Tech Hub, Innovation District</span>
+                    <span className="text-gray-700">Brooklyn, Pretoria</span>
                   </div>
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <h3 className="text-xl font-semibold mb-4">Follow Us</h3>
                 <div className="flex gap-4">
                   <a href="#" className="p-3 bg-gray-100 rounded-lg hover:bg-blue-100 transition-colors">
@@ -302,7 +302,7 @@ export default function Home() {
                     </svg>
                   </a>
                 </div>
-              </div>
+              </div> */}
 
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl">
                 <h3 className="text-xl font-semibold mb-3">Ready to Start?</h3>
@@ -366,7 +366,7 @@ export default function Home() {
           </div>
           
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Zenscend Tech Solutions. All rights reserved.</p>
+            <p>&copy; 2025 Zenscend Tech Solutions. All rights reserved.</p>
           </div>
         </div>
       </footer>
