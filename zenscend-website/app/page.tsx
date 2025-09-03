@@ -14,7 +14,8 @@ import {
   CheckCircle,
   Mail,
   Phone,
-  MapPin
+  MapPin,
+  CloudLightning
 } from "lucide-react";
 
 export default function Home() {
@@ -78,7 +79,7 @@ export default function Home() {
               {
                 icon: <Code2 className="h-12 w-12 text-blue-600" />,
                 title: "Custom Software Development",
-                description: "Tailored solutions built with cutting-edge technologies to meet your unique business needs"
+                description: "End-to-end tailored software solutions to meet your unique business needs"
               },
               {
                 icon: <Rocket className="h-12 w-12 text-blue-600" />,
@@ -86,9 +87,9 @@ export default function Home() {
                 description: "Modernize your operations and accelerate growth with our strategic digital solutions"
               },
               {
-                icon: <Users className="h-12 w-12 text-blue-600" />,
-                title: "Team Augmentation",
-                description: "Scale your development capabilities with our skilled engineers and consultants"
+                icon: <CloudLightning className="h-12 w-12 text-blue-600" />,
+                title: "Cloud and DevOps",
+                description: "Strealine your infrastructure with scalable cloud solutions and efficient DevOps practices"
               },
               {
                 icon: <Lightbulb className="h-12 w-12 text-blue-600" />,
@@ -174,20 +175,20 @@ export default function Home() {
                 <div className="relative z-10">
                   <div className="grid grid-cols-2 gap-8">
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-600">50+</div>
+                      <div className="text-4xl font-bold text-blue-600">10+</div>
                       <div className="text-gray-600 mt-2">Projects Delivered</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-600">98%</div>
-                      <div className="text-gray-600 mt-2">Client Satisfaction</div>
+                      <div className="text-4xl font-bold text-blue-600">100%</div>
+                      <div className="text-gray-600 mt-2">Commitment to Clean, Scalable Code</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-600">24/7</div>
-                      <div className="text-gray-600 mt-2">Support Available</div>
+                      <div className="text-4xl font-bold text-blue-600">&lt;24h</div>
+                      <div className="text-gray-600 mt-2">Average Response Time</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-600">15+</div>
-                      <div className="text-gray-600 mt-2">Expert Engineers</div>
+                      <div className="text-4xl font-bold text-blue-600">5+</div>
+                      <div className="text-gray-600 mt-2">Clients Served</div>
                     </div>
                   </div>
                 </div>
