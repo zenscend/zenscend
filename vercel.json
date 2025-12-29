@@ -1,5 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd zenscend-website && pnpm run build",
-  "installCommand": "cd zenscend-website && pnpm install"
+  "buildCommand": "cd zenscend-website && npm run build",
+  "installCommand": "cd zenscend-website && npm install"
 }
