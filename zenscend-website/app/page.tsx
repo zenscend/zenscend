@@ -2,13 +2,12 @@
 
 import Navigation from "@/components/Navigation";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { useState, FormEvent } from "react";
-import { 
+import {
   Code2,
-  Rocket, 
-  Lightbulb, 
-  Shield, 
+  Rocket,
+  Lightbulb,
+  Shield,
   Zap,
   ArrowRight,
   CheckCircle,
@@ -17,7 +16,8 @@ import {
   CloudLightning,
   Loader2,
   Check,
-  AlertCircle
+  AlertCircle,
+  MessageCircle
 } from "lucide-react";
 
 export default function Home() {
@@ -85,7 +85,7 @@ export default function Home() {
       
       {/* Hero Section */}
       <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
-        <div className="absolute inset-0 bg-grid opacity-5"></div>
+        <div className="absolute inset-0 bg-grid opacity-10"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -93,31 +93,37 @@ export default function Home() {
             transition={{ duration: 0.8 }}
           >
             <div className="mb-4">
-              <h1 className="text-xl md:text-2xl font-semibold text-blue-600 tracking-wider mb-2">
+              <h1 className="text-xl md:text-2xl font-semibold text-blue-400 tracking-wider mb-2">
                 Innovate. Elevate. Zenscend.
               </h1>
             </div>
-            <h2 className="text-5xl md:text-7xl font-bold mb-6">
+            <h2 className="text-5xl md:text-7xl font-bold mb-6 text-zinc-100">
               Elevate Your <span className="text-gradient">Digital Experience</span>
             </h2>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              We deliver clean, efficient, and scalable software solutions 
+            <p className="text-xl md:text-2xl text-zinc-400 mb-8 max-w-3xl mx-auto">
+              We deliver clean, efficient, and scalable software solutions
               that transform the way businesses operate in the digital space.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+              <a
+                href="#contact"
+                className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+              >
                 Get Started <ArrowRight className="h-5 w-5" />
-              </button>
-              <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-all">
+              </a>
+              <a
+                href="#services"
+                className="border-2 border-zinc-700 text-zinc-300 px-8 py-4 rounded-lg hover:border-blue-500 hover:text-blue-400 transition-all"
+              >
                 Learn More
-              </button>
+              </a>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-20 bg-gray-50">
+      <section id="services" className="py-20 bg-zinc-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
@@ -126,10 +132,10 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-zinc-100">
               Our <span className="text-gradient">Solutions</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
               Comprehensive technology solutions designed to propel your business forward
             </p>
           </motion.div>
@@ -137,32 +143,32 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                icon: <Code2 className="h-12 w-12 text-blue-600" />,
+                icon: <Code2 className="h-12 w-12 text-blue-400" />,
                 title: "Custom Software Development",
                 description: "End-to-end tailored software solutions to meet your unique business needs"
               },
               {
-                icon: <Rocket className="h-12 w-12 text-blue-600" />,
+                icon: <Rocket className="h-12 w-12 text-blue-400" />,
                 title: "Digital Transformation",
                 description: "Modernize your operations and accelerate growth with our strategic digital solutions"
               },
               {
-                icon: <CloudLightning className="h-12 w-12 text-blue-600" />,
+                icon: <CloudLightning className="h-12 w-12 text-blue-400" />,
                 title: "Cloud and DevOps",
                 description: "Strealine your infrastructure with scalable cloud solutions and efficient DevOps practices"
               },
               {
-                icon: <Lightbulb className="h-12 w-12 text-blue-600" />,
+                icon: <Lightbulb className="h-12 w-12 text-blue-400" />,
                 title: "Innovation Consulting",
                 description: "Strategic guidance to help you navigate emerging technologies and market trends"
               },
               {
-                icon: <Shield className="h-12 w-12 text-blue-600" />,
+                icon: <Shield className="h-12 w-12 text-blue-400" />,
                 title: "Security & Compliance",
                 description: "Robust security solutions to protect your data and ensure regulatory compliance"
               },
               {
-                icon: <Zap className="h-12 w-12 text-blue-600" />,
+                icon: <Zap className="h-12 w-12 text-blue-400" />,
                 title: "Performance Optimization",
                 description: "Enhance speed, efficiency, and scalability of your existing systems"
               }
@@ -173,11 +179,11 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+                className="bg-zinc-800/50 border border-zinc-700/50 p-8 rounded-xl hover:border-blue-500/50 hover:bg-zinc-800/70 transition-all"
               >
                 <div className="mb-4">{service.icon}</div>
-                <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
-                <p className="text-gray-600">{service.description}</p>
+                <h3 className="text-xl font-semibold mb-3 text-zinc-100">{service.title}</h3>
+                <p className="text-zinc-400">{service.description}</p>
               </motion.div>
             ))}
           </div>
@@ -185,7 +191,7 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 bg-white">
+      <section id="about" className="py-20 bg-zinc-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -194,17 +200,17 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-zinc-100">
                 Why Choose <span className="text-gradient">Zenscend</span>
               </h2>
-              <p className="text-lg text-gray-600 mb-6">
-                At Zenscend, we embody the perfect balance of tranquility and innovation. 
-                Our name reflects our philosophy: &ldquo;Zen&rdquo; for clarity, calm, and simplicity, 
+              <p className="text-lg text-zinc-400 mb-6">
+                At Zenscend, we embody the perfect balance of tranquility and innovation.
+                Our name reflects our philosophy: &ldquo;Zen&rdquo; for clarity, calm, and simplicity,
                 and &ldquo;Ascend&rdquo; for growth, progress, and reaching new heights.
               </p>
-              <p className="text-lg text-gray-600 mb-8">
-                We are more than developers &ndash; we are your strategic partners in digital evolution. 
-                Our approach combines thoughtful design with cutting-edge technology to deliver 
+              <p className="text-lg text-zinc-400 mb-8">
+                We are more than developers &ndash; we are your strategic partners in digital evolution.
+                Our approach combines thoughtful design with cutting-edge technology to deliver
                 solutions that not only meet today&rsquo;s needs but scale for tomorrow&rsquo;s opportunities.
               </p>
               <div className="space-y-4">
@@ -216,13 +222,13 @@ export default function Home() {
                   "Post-launch support and continuous optimization"
                 ].map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">{item}</span>
+                    <CheckCircle className="h-6 w-6 text-green-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-zinc-300">{item}</span>
                   </div>
                 ))}
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -230,25 +236,25 @@ export default function Home() {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl p-12 relative overflow-hidden">
+              <div className="bg-gradient-to-br from-blue-950/50 to-purple-950/50 border border-zinc-800 rounded-2xl p-12 relative overflow-hidden">
                 <div className="absolute inset-0 bg-dot-pattern opacity-20"></div>
                 <div className="relative z-10">
                   <div className="grid grid-cols-2 gap-8">
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-600">10+</div>
-                      <div className="text-gray-600 mt-2">Projects Delivered</div>
+                      <div className="text-4xl font-bold text-blue-400">10+</div>
+                      <div className="text-zinc-400 mt-2">Projects Delivered</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-600">100%</div>
-                      <div className="text-gray-600 mt-2">Commitment to Clean, Scalable Code</div>
+                      <div className="text-4xl font-bold text-blue-400">100%</div>
+                      <div className="text-zinc-400 mt-2">Commitment to Clean, Scalable Code</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-600">&lt;24h</div>
-                      <div className="text-gray-600 mt-2">Average Response Time</div>
+                      <div className="text-4xl font-bold text-blue-400">&lt;24h</div>
+                      <div className="text-zinc-400 mt-2">Average Response Time</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-600">5+</div>
-                      <div className="text-gray-600 mt-2">Clients Served</div>
+                      <div className="text-4xl font-bold text-blue-400">5+</div>
+                      <div className="text-zinc-400 mt-2">Clients Served</div>
                     </div>
                   </div>
                 </div>
@@ -259,7 +265,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gray-50">
+      <section id="contact" className="py-20 bg-zinc-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
@@ -268,10 +274,10 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-zinc-100">
               Let&rsquo;s <span className="text-gradient">Connect</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
               Ready to elevate your digital presence? We&rsquo;re here to help transform your vision into reality.
             </p>
           </motion.div>
@@ -282,75 +288,75 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="bg-white p-8 rounded-xl shadow-lg"
+              className="bg-zinc-800/50 border border-zinc-700/50 p-8 rounded-xl"
             >
-              <h3 className="text-2xl font-semibold mb-6">Get in Touch</h3>
+              <h3 className="text-2xl font-semibold mb-6 text-zinc-100">Get in Touch</h3>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">Name</label>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 text-zinc-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-zinc-500"
                     placeholder="Your Name"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">Email</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 text-zinc-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-zinc-500"
                     placeholder="your@email.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">Message</label>
                   <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
                     required
                     rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 text-zinc-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-zinc-500"
                     placeholder="Tell us about your project..."
                   />
                 </div>
-                
+
                 {/* Success Message */}
                 {submitStatus === 'success' && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2"
+                    className="bg-green-950/50 border border-green-800 text-green-400 px-4 py-3 rounded-lg flex items-center gap-2"
                   >
                     <Check className="h-5 w-5" />
                     <span>Message sent successfully! We&apos;ll get back to you soon.</span>
                   </motion.div>
                 )}
-                
+
                 {/* Error Message */}
                 {submitStatus === 'error' && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2"
+                    className="bg-red-950/50 border border-red-800 text-red-400 px-4 py-3 rounded-lg flex items-center gap-2"
                   >
                     <AlertCircle className="h-5 w-5" />
                     <span>{errorMessage || 'Failed to send message. Please try again.'}</span>
                   </motion.div>
                 )}
-                
+
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-zinc-700 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
                     <>
@@ -372,19 +378,19 @@ export default function Home() {
               className="space-y-8"
             >
               <div>
-                <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
+                <h3 className="text-2xl font-semibold mb-6 text-zinc-100">Contact Information</h3>
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
-                    <Mail className="h-6 w-6 text-blue-600" />
-                    <span className="text-gray-700">bongani@zenscend.co</span>
+                    <Mail className="h-6 w-6 text-blue-400" />
+                    <span className="text-zinc-300">bongani@zenscend.co</span>
                   </div>
                   {/* <div className="flex items-center gap-4">
-                    <Phone className="h-6 w-6 text-blue-600" />
-                    <span className="text-gray-700">+1 (555) 123-4567</span>
+                    <Phone className="h-6 w-6 text-blue-400" />
+                    <span className="text-zinc-300">+1 (555) 123-4567</span>
                   </div> */}
                   <div className="flex items-center gap-4">
-                    <MapPin className="h-6 w-6 text-blue-600" />
-                    <span className="text-gray-700">Brooklyn, Pretoria</span>
+                    <MapPin className="h-6 w-6 text-blue-400" />
+                    <span className="text-zinc-300">Brooklyn, Pretoria</span>
                   </div>
                 </div>
               </div>
@@ -410,14 +416,20 @@ export default function Home() {
                 </div>
               </div> */}
 
-              <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl">
-                <h3 className="text-xl font-semibold mb-3">Ready to Start?</h3>
-                <p className="text-gray-600 mb-4">
-                  Schedule a free consultation to discuss your project requirements and discover how we can help.
+              <div className="bg-gradient-to-br from-blue-950/50 to-purple-950/50 border border-zinc-800 p-6 rounded-xl">
+                <h3 className="text-xl font-semibold mb-3 text-zinc-100">Ready to Start?</h3>
+                <p className="text-zinc-400 mb-4">
+                  Chat with us on WhatsApp to discuss your project requirements and discover how we can help.
                 </p>
-                <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                  Schedule Consultation
-                </button>
+                <a
+                  href="https://wa.me/27645327596?text=Hi%2C%20I%27d%20like%20to%20discuss%20a%20project%20with%20Zenscend"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  Chat on WhatsApp
+                </a>
               </div>
             </motion.div>
           </div>
@@ -425,54 +437,10 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-zinc-950 border-t border-zinc-800 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="mb-4">
-                <Image 
-                  src="/zenscend-logo-full-light.svg" 
-                  alt="Zenscend" 
-                  width={140}
-                  height={32}
-                  className="h-8 w-auto"
-                />
-              </div>
-              <p className="text-gray-400">
-                Elevating digital experiences through clarity and innovation.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4">Services</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Software Development</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Digital Transformation</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Consulting</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Cookie Policy</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 Zenscend Tech Solutions. All rights reserved.</p>
+          <div className="pt-8 text-center text-zinc-500">
+            <p>&copy; 2026 Zenscend Tech Solutions. All rights reserved.</p>
           </div>
         </div>
       </footer>
