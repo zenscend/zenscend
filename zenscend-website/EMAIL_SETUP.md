@@ -2,7 +2,7 @@
 
 ## Contact Form Email Configuration
 
-The contact form on the website uses **Resend** to send emails to `bongani@zenscend.co`.
+The contact form on the website uses **Resend** to send emails to my email address.
 
 ### Setup Steps:
 
