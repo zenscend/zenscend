@@ -107,7 +107,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="#contact"
-                className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                className="btn-primary text-white px-8 py-4 rounded-lg transition-all flex items-center justify-center gap-2"
               >
                 Get Started <ArrowRight className="h-5 w-5" />
               </a>
@@ -356,7 +356,7 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-zinc-700 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="btn-primary w-full text-white py-3 rounded-lg transition-all flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
                     <>
@@ -425,7 +425,7 @@ export default function Home() {
                   href="https://wa.me/27645327596?text=Hi%2C%20I%27d%20like%20to%20discuss%20a%20project%20with%20Zenscend"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="btn-whatsapp inline-flex items-center gap-2 text-white px-6 py-2 rounded-lg transition-all duration-300"
                 >
                   <MessageCircle className="h-5 w-5" />
                   Chat on WhatsApp
