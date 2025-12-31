@@ -107,7 +107,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="#contact"
-                className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                className="btn-primary text-white px-8 py-4 rounded-lg transition-all flex items-center justify-center gap-2"
               >
                 Get Started <ArrowRight className="h-5 w-5" />
               </a>
@@ -129,7 +129,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-zinc-100">
@@ -178,7 +178,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 className="bg-zinc-800/50 border border-zinc-700/50 p-8 rounded-xl hover:border-blue-500/50 hover:bg-zinc-800/70 transition-all"
               >
                 <div className="mb-4">{service.icon}</div>
@@ -198,7 +198,7 @@ export default function Home() {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-zinc-100">
                 Why Choose <span className="text-gradient">Zenscend</span>
@@ -233,7 +233,7 @@ export default function Home() {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               className="relative"
             >
               <div className="bg-gradient-to-br from-blue-950/50 to-purple-950/50 border border-zinc-800 rounded-2xl p-12 relative overflow-hidden">
@@ -271,7 +271,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-zinc-100">
@@ -287,7 +287,7 @@ export default function Home() {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               className="bg-zinc-800/50 border border-zinc-700/50 p-8 rounded-xl"
             >
               <h3 className="text-2xl font-semibold mb-6 text-zinc-100">Get in Touch</h3>
@@ -356,7 +356,7 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-zinc-700 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="btn-primary w-full text-white py-3 rounded-lg transition-all flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
                     <>
@@ -374,7 +374,7 @@ export default function Home() {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               className="space-y-8"
             >
               <div>
@@ -425,7 +425,7 @@ export default function Home() {
                   href="https://wa.me/27645327596?text=Hi%2C%20I%27d%20like%20to%20discuss%20a%20project%20with%20Zenscend"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="btn-whatsapp inline-flex items-center gap-2 text-white px-6 py-2 rounded-lg transition-all duration-300"
                 >
                   <MessageCircle className="h-5 w-5" />
                   Chat on WhatsApp

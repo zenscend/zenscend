@@ -45,7 +45,7 @@ const Navigation = () => {
               ))}
               <Link
                 href="#contact"
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="btn-primary text-white px-6 py-2 rounded-lg transition-all"
               >
                 Get Started
               </Link>
@@ -84,7 +84,7 @@ const Navigation = () => {
               ))}
               <Link
                 href="#contact"
-                className="block w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors mt-4 text-center"
+                className="btn-primary block w-full text-white px-6 py-2 rounded-lg transition-all mt-4 text-center"
                 onClick={() => setIsOpen(false)}
               >
                 Get Started
