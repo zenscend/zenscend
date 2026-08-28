@@ -1,70 +1,150 @@
 "use client";
 
 import Navigation from "@/components/Navigation";
-import { motion } from "framer-motion";
-import { useState, FormEvent } from "react";
+import { useState, useEffect, useRef, FormEvent } from "react";
+import Image from "next/image";
 import {
-  Code2,
-  Rocket,
-  Lightbulb,
-  Shield,
-  Zap,
   ArrowRight,
-  CheckCircle,
+  ArrowUpRight,
   Mail,
   MapPin,
-  CloudLightning,
   Loader2,
   Check,
   AlertCircle,
-  MessageCircle
+  MessageCircle,
 } from "lucide-react";
 
+const services = [
+  {
+    tag: "app/",
+    title: "Custom software development",
+    body: "Interfaces, services, and the wiring between them, built around your domain instead of bent out of a template.",
+  },
+  {
+    tag: "migrate/",
+    title: "Legacy modernization",
+    body: "Moving a system that works but nobody wants to touch onto something maintainable, without a big-bang rewrite.",
+  },
+  {
+    tag: "cloud/",
+    title: "Cloud and DevOps",
+    body: "Provisioning, pipelines, and deploys that are boring on purpose. Infrastructure you can read.",
+  },
+  {
+    tag: "advisory/",
+    title: "Technical advisory",
+    body: "A second opinion on an architecture, a hire, or a vendor's proposal, while it is still cheap to change course.",
+  },
+  {
+    tag: "sec/",
+    title: "Security and compliance",
+    body: "Access control, secrets handling, audit trails. The parts nobody notices until they are missing.",
+  },
+  {
+    tag: "perf/",
+    title: "Performance optimization",
+    body: "Profiling what already exists, finding the slow query, and making the number go down.",
+  },
+];
+
+const work = [
+  {
+    name: "Zuza",
+    href: "https://zuzatech.com/",
+    logo: "/work/zuza.png",
+    sector: "supply chain · retail · south africa",
+    role: "Product partnership — Zenscend leads the technical side",
+    body: "A platform for independent vendors across Africa: consolidated inventory, a network of trusted suppliers, and the analytics to see what is actually selling.",
+    stack: ["Next.js", "vendor dashboard", "supplier integrations", "analytics"],
+  },
+];
+
+const principles = [
+  "Code the next person can read, including you a year from now",
+  "Architecture sized for the load you have, with room for the load you expect",
+  "Short cycles, with something running at the end of each one",
+  "You see the repo, the board, and the bad news early",
+  "We stay on after launch, because launch is when the real load arrives",
+];
+
+const stats = [
+  { figure: "10+", label: "Projects shipped" },
+  { figure: "5+", label: "Clients served" },
+  { figure: "<24h", label: "Reply to new enquiries" },
+];
+
 export default function Home() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: ""
-  });
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Real local time in Pretoria, not decorative terminal output. Starts null so
+  // the server-rendered placeholder matches the first client render.
+  const [now, setNow] = useState<string | null>(null);
+  useEffect(() => {
+    const fmt = new Intl.DateTimeFormat("en-ZA", {
+      timeZone: "Africa/Johannesburg",
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+    const tick = () => setNow(fmt.format(new Date()));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Pointer position inside the hero panel, reported in the panel header the way
+  // an instrument reports a probe. rAF-throttled so mousemove stays cheap.
+  const panelRef = useRef<HTMLDivElement>(null);
+  const frame = useRef<number | null>(null);
+  const [probe, setProbe] = useState<{ x: number; y: number } | null>(null);
+
+  const handlePointer = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = panelRef.current;
+    if (!el) return;
+    const box = el.getBoundingClientRect();
+    const x = Math.round(e.clientX - box.left);
+    const y = Math.round(e.clientY - box.top);
+    if (frame.current !== null) cancelAnimationFrame(frame.current);
+    frame.current = requestAnimationFrame(() => setProbe({ x, y }));
+  };
+
+  useEffect(() => () => {
+    if (frame.current !== null) cancelAnimationFrame(frame.current);
+  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitStatus('idle');
+    setSubmitStatus("idle");
     setErrorMessage("");
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to send message');
+        throw new Error(data.error || "Failed to send message");
       }
 
-      setSubmitStatus('success');
+      setSubmitStatus("success");
       setFormData({ name: "", email: "", message: "" });
-      
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 5000);
+
+      setTimeout(() => setSubmitStatus("idle"), 5000);
     } catch (error) {
-      setSubmitStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'Something went wrong');
-      
-      // Reset error message after 5 seconds
+      setSubmitStatus("error");
+      setErrorMessage(error instanceof Error ? error.message : "Something went wrong");
+
       setTimeout(() => {
-        setSubmitStatus('idle');
+        setSubmitStatus("idle");
         setErrorMessage("");
       }, 5000);
     } finally {
@@ -72,376 +152,439 @@ export default function Home() {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const field =
+    "w-full bg-paper-sunk border border-field px-4 py-3 text-sm text-ink placeholder:text-ink-dim/70 focus:border-signal focus:bg-paper transition-colors";
+
   return (
     <>
       <Navigation />
-      
-      {/* Hero Section */}
-      <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
-        <div className="absolute inset-0 bg-grid opacity-10"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="mb-4">
-              <h1 className="text-xl md:text-2xl font-semibold text-blue-400 tracking-wider mb-2">
-                Innovate. Elevate. Zenscend.
-              </h1>
+
+      {/* Hero -------------------------------------------------------------- */}
+      <section id="home" className="relative overflow-hidden pt-14">
+        <div aria-hidden className="absolute inset-0 field-structure" />
+
+        <div className="relative mx-auto max-w-6xl px-5 sm:px-8 py-20 md:py-28">
+          <div className="cut-frame [--c:28px]">
+            <div
+              ref={panelRef}
+              onMouseMove={handlePointer}
+              onMouseLeave={() => setProbe(null)}
+              className="relative bg-ground text-text"
+            >
+              {/* panel header strip */}
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-6 py-3 font-display text-[10px] tracking-tight text-dim">
+                <span>zenscend.co</span>
+                <span className="tabular-nums">
+                  <span className="probe-readout text-dim/60">
+                    x:{probe ? String(probe.x).padStart(4, "0") : "----"} y:
+                    {probe ? String(probe.y).padStart(4, "0") : "----"}
+                  </span>
+                  <span className="probe-readout mx-3 text-dim/40">|</span>
+                  {now ?? "--:--:--"} SAST
+                </span>
+              </div>
+
+              {probe && (
+                <div aria-hidden>
+                  <span
+                    className="crosshair-line inset-y-0 w-px"
+                    style={{ left: probe.x }}
+                  />
+                  <span
+                    className="crosshair-line inset-x-0 h-px"
+                    style={{ top: probe.y }}
+                  />
+                </div>
+              )}
+
+              <div className="relative px-6 py-12 sm:px-12 md:py-16">
+                <p className="settle flex items-center gap-2 font-display text-[11px] tracking-tight text-dim">
+                  <span className="h-1.5 w-1.5 bg-signal" />
+                  accepting work
+                </p>
+
+                <h1
+                  className="settle mt-6 font-display text-[1.75rem]/[1.2] tracking-[-0.055em] sm:text-4xl/[1.14] md:text-[3.25rem]/[1.1]"
+                  style={{ ["--i" as string]: 1 }}
+                >
+                  Interfaces people use.{" "}
+                  <span className="sm:block">
+                    Systems that hold.
+                    <span aria-hidden className="cursor-block" />
+                  </span>
+                </h1>
+
+                {/* The rule under the headline ascends in steps instead of
+                    running flat: the stair carved into the mark, and the
+                    "-scend" half of the name. */}
+                <div aria-hidden className="mt-12 flex h-12 items-end">
+                  {[12, 24, 36, 48].map((h, i) => (
+                    <span
+                      key={h}
+                      className={`stair-step w-10 border-l-2 border-t-2 ${
+                        i === 3 ? "border-signal" : "border-structure"
+                      }`}
+                      style={{ height: h, ["--i" as string]: i + 2 }}
+                    />
+                  ))}
+                  <span className="h-px flex-1 self-start bg-line" />
+                </div>
+
+                <p
+                  className="settle mt-10 max-w-xl text-lg leading-relaxed text-dim"
+                  style={{ ["--i" as string]: 6 }}
+                >
+                  We are not a web shop or a mobile shop. We are developers.
+                  Whatever the problem runs on, we build it — and we run it
+                  after.
+                </p>
+
+                <div
+                  className="settle mt-10 flex flex-col gap-3 sm:flex-row"
+                  style={{ ["--i" as string]: 7 }}
+                >
+                  <a
+                    href="#contact"
+                    className="cut [--c:12px] inline-flex items-center justify-center gap-2 bg-signal px-6 py-4 font-display text-[11px] tracking-tight text-ground transition-colors hover:bg-text"
+                  >
+                    Start a project <ArrowRight className="h-4 w-4" />
+                  </a>
+                  <a
+                    href="#services"
+                    className="inline-flex items-center justify-center border border-line px-6 py-4 font-display text-[11px] tracking-tight text-dim transition-colors hover:border-dim hover:text-text"
+                  >
+                    See what we build
+                  </a>
+                </div>
+              </div>
             </div>
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 text-zinc-100">
-              Elevate Your <span className="text-gradient">Digital Experience</span>
-            </h2>
-            <p className="text-xl md:text-2xl text-zinc-400 mb-8 max-w-3xl mx-auto">
-              We deliver clean, efficient, and scalable software solutions
-              that transform the way businesses operate in the digital space.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="#contact"
-                className="btn-primary text-white px-8 py-4 rounded-lg transition-all flex items-center justify-center gap-2"
-              >
-                Get Started <ArrowRight className="h-5 w-5" />
-              </a>
-              <a
-                href="#services"
-                className="border-2 border-zinc-700 text-zinc-300 px-8 py-4 rounded-lg hover:border-blue-500 hover:text-blue-400 transition-all"
-              >
-                Learn More
-              </a>
-            </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-20 bg-zinc-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: false }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-zinc-100">
-              Our <span className="text-gradient">Solutions</span>
-            </h2>
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-              Comprehensive technology solutions designed to propel your business forward
-            </p>
-          </motion.div>
+      {/* Services ---------------------------------------------------------- */}
+      <section id="services" className="border-t border-rule">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8 py-24">
+          <p className="font-display text-[11px] tracking-tight text-signal-ink">services</p>
+          <h2 className="mt-4 max-w-2xl font-display text-2xl leading-tight tracking-[-0.05em] md:text-[2rem]">
+            What we build
+          </h2>
+          <p className="mt-4 max-w-xl text-ink-dim">
+            This is what we are asked for most. It is not the limit.
+          </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: <Code2 className="h-12 w-12 text-blue-400" />,
-                title: "Custom Software Development",
-                description: "End-to-end tailored software solutions to meet your unique business needs"
-              },
-              {
-                icon: <Rocket className="h-12 w-12 text-blue-400" />,
-                title: "Digital Transformation",
-                description: "Modernize your operations and accelerate growth with our strategic digital solutions"
-              },
-              {
-                icon: <CloudLightning className="h-12 w-12 text-blue-400" />,
-                title: "Cloud and DevOps",
-                description: "Strealine your infrastructure with scalable cloud solutions and efficient DevOps practices"
-              },
-              {
-                icon: <Lightbulb className="h-12 w-12 text-blue-400" />,
-                title: "Innovation Consulting",
-                description: "Strategic guidance to help you navigate emerging technologies and market trends"
-              },
-              {
-                icon: <Shield className="h-12 w-12 text-blue-400" />,
-                title: "Security & Compliance",
-                description: "Robust security solutions to protect your data and ensure regulatory compliance"
-              },
-              {
-                icon: <Zap className="h-12 w-12 text-blue-400" />,
-                title: "Performance Optimization",
-                description: "Enhance speed, efficiency, and scalability of your existing systems"
-              }
-            ].map((service, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: false }}
-                className="bg-zinc-800/50 border border-zinc-700/50 p-8 rounded-xl hover:border-blue-500/50 hover:bg-zinc-800/70 transition-all"
+          <div className="cut-frame [--c:28px] mt-14">
+            <div className="grid gap-px bg-line text-text sm:grid-cols-2 lg:grid-cols-3">
+              {services.map((service) => (
+                <div
+                  key={service.tag}
+                  className="group bg-ground p-7 transition-colors hover:bg-wash md:p-9"
+                >
+                  <p className="font-display text-[11px] tracking-tight text-dim transition-colors group-hover:text-signal">
+                    {service.tag}
+                  </p>
+                  <h3 className="mt-5 font-display text-sm leading-snug tracking-tight">
+                    {service.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-dim">{service.body}</p>
+                </div>
+              ))}
+
+              {/* `*` is the shell glob for "match anything". The section says
+                  limitless in the page's own vocabulary instead of claiming it. */}
+              <a
+                href="#contact"
+                className="group flex items-center justify-between gap-6 bg-ground p-7 transition-colors hover:bg-wash sm:col-span-2 md:p-9 lg:col-span-3"
               >
-                <div className="mb-4">{service.icon}</div>
-                <h3 className="text-xl font-semibold mb-3 text-zinc-100">{service.title}</h3>
-                <p className="text-zinc-400">{service.description}</p>
-              </motion.div>
+                <span className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
+                  <span className="font-display text-[11px] tracking-tight text-signal">*/</span>
+                  <span className="text-sm text-dim">
+                    Whatever is not on this list. The stack is incidental — ask.
+                  </span>
+                </span>
+                <ArrowRight className="h-4 w-4 shrink-0 text-dim transition-colors group-hover:text-signal" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our work ---------------------------------------------------------- */}
+      <section id="work" className="border-t border-rule">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8 py-24">
+          <p className="font-display text-[11px] tracking-tight text-signal-ink">our work</p>
+          <h2 className="mt-4 max-w-2xl font-display text-2xl leading-tight tracking-[-0.05em] md:text-[2rem]">
+            What we have shipped
+          </h2>
+
+          <div className="mt-14 space-y-px">
+            {work.map((project) => (
+              <div key={project.name} className="cut-frame [--c:28px]">
+                <div className="grid gap-px bg-line text-text sm:grid-cols-[13rem_1fr]">
+                  {/* the asset is artwork on pure black; the plate owns that
+                      rather than trying to blend it into the ground */}
+                  <div className="flex items-center justify-center bg-black p-8">
+                    <Image
+                      src={project.logo}
+                      alt={`${project.name} logo`}
+                      width={348}
+                      height={349}
+                      className="h-24 w-24 object-contain"
+                    />
+                  </div>
+
+                  <div className="bg-ground p-7 md:p-9">
+                    <p className="font-display text-[10px] tracking-tight text-dim">
+                      {project.sector}
+                    </p>
+                    <h3 className="mt-4 font-display text-xl tracking-[-0.04em]">
+                      {project.name}
+                    </h3>
+                    <p className="mt-2 font-display text-[10px] leading-relaxed tracking-tight text-text">
+                      {project.role}
+                    </p>
+                    <p className="mt-5 max-w-xl text-sm leading-relaxed text-dim">
+                      {project.body}
+                    </p>
+
+                    <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+                      {project.stack.map((item) => (
+                        <span
+                          key={item}
+                          className="font-display text-[10px] tracking-tight text-dim"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+
+                    <a
+                      href={project.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-8 inline-flex items-center gap-2 border border-line px-5 py-3 font-display text-[11px] tracking-tight text-dim transition-colors hover:border-dim hover:text-text"
+                    >
+                      zuzatech.com
+                      <ArrowUpRight className="h-4 w-4" />
+                    </a>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-20 bg-zinc-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: false }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-zinc-100">
-                Why Choose <span className="text-gradient">Zenscend</span>
+      {/* About ------------------------------------------------------------- */}
+      <section id="about" className="border-t border-rule">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8 py-24">
+          <div className="grid gap-16 lg:grid-cols-2 lg:gap-20">
+            <div>
+              <p className="font-display text-[11px] tracking-tight text-signal-ink">about</p>
+              <h2 className="mt-4 font-display text-2xl leading-tight tracking-[-0.05em] md:text-[2rem]">
+                How we work
               </h2>
-              <p className="text-lg text-zinc-400 mb-6">
-                At Zenscend, we embody the perfect balance of tranquility and innovation.
-                Our name reflects our philosophy: &ldquo;Zen&rdquo; for clarity, calm, and simplicity,
-                and &ldquo;Ascend&rdquo; for growth, progress, and reaching new heights.
+
+              <p className="mt-8 leading-relaxed text-ink-dim">
+                Zenscend is Zen and Ascend: clarity in how a system is built, and
+                room for it to grow. In practice that means we would rather spend a
+                week on the data model than a month on the migration that follows a
+                bad one.
               </p>
-              <p className="text-lg text-zinc-400 mb-8">
-                We are more than developers &ndash; we are your strategic partners in digital evolution.
-                Our approach combines thoughtful design with cutting-edge technology to deliver
-                solutions that not only meet today&rsquo;s needs but scale for tomorrow&rsquo;s opportunities.
+              <p className="mt-5 leading-relaxed text-ink-dim">
+                We work as part of your team, not adjacent to it. Most of what we do
+                is unglamorous — the screen that has to work on a cheap phone over
+                patchy data, the query that has to return in time, the deploy that
+                has to be uneventful.
               </p>
-              <div className="space-y-4">
-                {[
-                  "Clean, maintainable code that stands the test of time",
-                  "Scalable architecture designed for growth",
-                  "Agile methodology for rapid, iterative development",
-                  "Transparent communication throughout the project lifecycle",
-                  "Post-launch support and continuous optimization"
-                ].map((item, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <CheckCircle className="h-6 w-6 text-green-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-zinc-300">{item}</span>
-                  </div>
+
+              <ul className="mt-10 space-y-4">
+                {principles.map((item) => (
+                  <li key={item} className="flex gap-4">
+                    <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 bg-signal" />
+                    <span className="text-sm leading-relaxed text-ink">{item}</span>
+                  </li>
                 ))}
-              </div>
-            </motion.div>
+              </ul>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: false }}
-              className="relative"
-            >
-              <div className="bg-gradient-to-br from-blue-950/50 to-purple-950/50 border border-zinc-800 rounded-2xl p-12 relative overflow-hidden">
-                <div className="absolute inset-0 bg-dot-pattern opacity-20"></div>
-                <div className="relative z-10">
-                  <div className="grid grid-cols-2 gap-8">
-                    <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-400">10+</div>
-                      <div className="text-zinc-400 mt-2">Projects Delivered</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-400">100%</div>
-                      <div className="text-zinc-400 mt-2">Commitment to Clean, Scalable Code</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-400">&lt;24h</div>
-                      <div className="text-zinc-400 mt-2">Average Response Time</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-400">5+</div>
-                      <div className="text-zinc-400 mt-2">Clients Served</div>
-                    </div>
+            <div className="lg:pt-20">
+              <div className="cut-frame [--c:24px]">
+                <div className="bg-wash text-text">
+                  <div className="border-b border-line/60 px-7 py-3 font-display text-[10px] tracking-tight text-dim">
+                    to date
                   </div>
+                  <dl className="divide-y divide-line/60">
+                    {stats.map((stat) => (
+                      <div
+                        key={stat.label}
+                        className="flex items-baseline justify-between gap-6 px-7 py-7"
+                      >
+                        <dd className="font-display text-3xl tracking-[-0.04em] md:text-4xl">
+                          {stat.figure}
+                        </dd>
+                        <dt className="text-right text-sm text-dim">{stat.label}</dt>
+                      </div>
+                    ))}
+                  </dl>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-20 bg-zinc-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: false }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-zinc-100">
-              Let&rsquo;s <span className="text-gradient">Connect</span>
-            </h2>
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-              Ready to elevate your digital presence? We&rsquo;re here to help transform your vision into reality.
-            </p>
-          </motion.div>
+      {/* Contact ----------------------------------------------------------- */}
+      <section id="contact" className="border-t border-rule">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8 py-24">
+          <p className="font-display text-[11px] tracking-tight text-signal-ink">contact</p>
+          <h2 className="mt-4 font-display text-2xl leading-tight tracking-[-0.05em] md:text-[2rem]">
+            Tell us about the system
+          </h2>
+          <p className="mt-4 max-w-xl text-ink-dim">
+            What you are building, what is breaking, or what you are choosing
+            between. We reply within a day.
+          </p>
 
-          <div className="grid lg:grid-cols-2 gap-12">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: false }}
-              className="bg-zinc-800/50 border border-zinc-700/50 p-8 rounded-xl"
-            >
-              <h3 className="text-2xl font-semibold mb-6 text-zinc-100">Get in Touch</h3>
-              <form className="space-y-6" onSubmit={handleSubmit}>
-                <div>
-                  <label className="block text-sm font-medium text-zinc-300 mb-2">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 text-zinc-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-zinc-500"
-                    placeholder="Your Name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-zinc-300 mb-2">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 text-zinc-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-zinc-500"
-                    placeholder="your@email.com"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-zinc-300 mb-2">Message</label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    required
-                    rows={4}
-                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 text-zinc-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-zinc-500"
-                    placeholder="Tell us about your project..."
-                  />
-                </div>
-
-                {/* Success Message */}
-                {submitStatus === 'success' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-green-950/50 border border-green-800 text-green-400 px-4 py-3 rounded-lg flex items-center gap-2"
-                  >
-                    <Check className="h-5 w-5" />
-                    <span>Message sent successfully! We&apos;ll get back to you soon.</span>
-                  </motion.div>
-                )}
-
-                {/* Error Message */}
-                {submitStatus === 'error' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-red-950/50 border border-red-800 text-red-400 px-4 py-3 rounded-lg flex items-center gap-2"
-                  >
-                    <AlertCircle className="h-5 w-5" />
-                    <span>{errorMessage || 'Failed to send message. Please try again.'}</span>
-                  </motion.div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="btn-primary w-full text-white py-3 rounded-lg transition-all flex items-center justify-center gap-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    'Send Message'
-                  )}
-                </button>
-              </form>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: false }}
-              className="space-y-8"
-            >
+          <div className="mt-14 grid gap-12 lg:grid-cols-2 lg:gap-16">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
-                <h3 className="text-2xl font-semibold mb-6 text-zinc-100">Contact Information</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <Mail className="h-6 w-6 text-blue-400" />
-                    <span className="text-zinc-300">bongani@zenscend.co</span>
-                  </div>
-                  {/* <div className="flex items-center gap-4">
-                    <Phone className="h-6 w-6 text-blue-400" />
-                    <span className="text-zinc-300">+1 (555) 123-4567</span>
-                  </div> */}
-                  <div className="flex items-center gap-4">
-                    <MapPin className="h-6 w-6 text-blue-400" />
-                    <span className="text-zinc-300">Brooklyn, Pretoria</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* <div>
-                <h3 className="text-xl font-semibold mb-4">Follow Us</h3>
-                <div className="flex gap-4">
-                  <a href="#" className="p-3 bg-gray-100 rounded-lg hover:bg-blue-100 transition-colors">
-                    <svg className="h-6 w-6 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                  </a>
-                  <a href="#" className="p-3 bg-gray-100 rounded-lg hover:bg-blue-100 transition-colors">
-                    <svg className="h-6 w-6 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                    </svg>
-                  </a>
-                  <a href="#" className="p-3 bg-gray-100 rounded-lg hover:bg-blue-100 transition-colors">
-                    <svg className="h-6 w-6 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                  </a>
-                </div>
-              </div> */}
-
-              <div className="bg-gradient-to-br from-blue-950/50 to-purple-950/50 border border-zinc-800 p-6 rounded-xl">
-                <h3 className="text-xl font-semibold mb-3 text-zinc-100">Ready to Start?</h3>
-                <p className="text-zinc-400 mb-4">
-                  Chat with us on WhatsApp to discuss your project requirements and discover how we can help.
-                </p>
-                <a
-                  href="https://wa.me/27645327596?text=Hi%2C%20I%27d%20like%20to%20discuss%20a%20project%20with%20Zenscend"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-whatsapp inline-flex items-center gap-2 text-white px-6 py-2 rounded-lg transition-all duration-300"
+                <label
+                  htmlFor="name"
+                  className="mb-2 block font-display text-[10px] tracking-tight text-ink-dim"
                 >
-                  <MessageCircle className="h-5 w-5" />
-                  Chat on WhatsApp
-                </a>
+                  name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  className={field}
+                  placeholder="Your name"
+                />
               </div>
-            </motion.div>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-2 block font-display text-[10px] tracking-tight text-ink-dim"
+                >
+                  email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className={field}
+                  placeholder="you@company.com"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="message"
+                  className="mb-2 block font-display text-[10px] tracking-tight text-ink-dim"
+                >
+                  message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  required
+                  rows={5}
+                  className={field}
+                  placeholder="What are you building, and what is in the way?"
+                />
+              </div>
+
+              <div aria-live="polite">
+                {submitStatus === "success" && (
+                  <p className="flex items-center gap-3 border border-field bg-paper-sunk px-4 py-3 text-sm text-ink">
+                    <Check className="h-4 w-4 shrink-0 text-signal" />
+                    Sent. We will reply within a day.
+                  </p>
+                )}
+                {submitStatus === "error" && (
+                  <p className="flex items-center gap-3 border border-signal/60 bg-paper-sunk px-4 py-3 text-sm text-ink">
+                    <AlertCircle className="h-4 w-4 shrink-0 text-signal" />
+                    {errorMessage || "Could not send. Try again, or email bongani@zenscend.co."}
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="cut [--c:12px] flex w-full items-center justify-center gap-2 bg-signal sm:w-auto sm:px-10 px-6 py-4 font-display text-[11px] tracking-tight text-ground transition-colors hover:bg-text disabled:cursor-not-allowed disabled:bg-rule disabled:text-ink-dim"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Sending
+                  </>
+                ) : (
+                  "Send message"
+                )}
+              </button>
+            </form>
+
+            <div className="space-y-10">
+              <div>
+                <p className="font-display text-[10px] tracking-tight text-ink-dim">direct</p>
+                <div className="mt-5 space-y-4">
+                  <a
+                    href="mailto:info@zenscend.co"
+                    className="flex items-center gap-4 text-sm text-ink transition-colors hover:text-signal-ink"
+                  >
+                    <Mail className="h-4 w-4 text-ink-dim" />
+                    info@zenscend.co
+                  </a>
+                  <p className="flex items-center gap-4 text-sm text-ink">
+                    <MapPin className="h-4 w-4 text-ink-dim" />
+                    Brooklyn, Pretoria
+                  </p>
+                </div>
+              </div>
+
+              <div className="cut-frame [--c:20px]">
+                <div className="bg-ground p-7 text-text">
+                  <h3 className="font-display text-sm tracking-tight">Rather just talk?</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-dim">
+                    Message us on WhatsApp. The same person who builds it answers.
+                  </p>
+                  <a
+                    href="https://wa.me/27645327596?text=Hi%2C%20I%27d%20like%20to%20discuss%20a%20project%20with%20Zenscend"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex items-center gap-3 bg-whatsapp px-5 py-3 font-display text-[11px] tracking-tight text-ground transition-colors hover:bg-whatsapp-deep"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    Chat on WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-zinc-950 border-t border-zinc-800 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="pt-8 text-center text-zinc-500">
-            <p>&copy; 2026 Zenscend Tech Solutions. All rights reserved.</p>
-          </div>
+      <footer className="border-t border-rule">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-8 font-display text-[10px] tracking-tight text-ink-dim sm:px-8">
+          <span>© 2026 Zenscend Tech Solutions</span>
+          <span>innovate. elevate. zenscend.</span>
         </div>
       </footer>
     </>

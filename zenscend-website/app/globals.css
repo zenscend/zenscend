@@ -4,119 +4,152 @@
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 4% 16%;
-    --secondary-foreground: 0 0% 98%;
-    --accent: 240 4% 16%;
-    --accent-foreground: 217 91% 60%;
-    --muted: 240 4% 16%;
-    --muted-foreground: 240 5% 65%;
-    --border: 240 4% 16%;
-    --radius: 0.5rem;
+    --ground: #0b0c0e;
+    --surface: #121417;
+    --line: #1f2328;
+    --text: #e6e8eb;
+    --dim: #8b9198;
+    --structure: #4100f5;
+    --signal: #ff4632;
+    --paper: #ffffff;
+    --rule: #e2e5e9;
+    --ink: #0b0c0e;
+    --signal-ink: #d93c2a;
+  }
+
+  * {
+    @apply border-rule;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  /* Inset so the ring survives clip-path on cut elements. */
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: -3px;
+  }
+
+  /* A vermilion ring on a vermilion button is invisible. Flip to the ground
+     colour on signal-filled controls (6.7:1 against #ff4632). */
+  .bg-signal:focus-visible {
+    outline-color: var(--ground);
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
+  /* Martian Mono is wide and light by default. Display sizes need weight and
+     negative tracking or the headline reads as terminal output, not a headline. */
+  h1, h2, h3 {
+    font-weight: 700;
   }
-  body {
-    @apply bg-background text-foreground;
+}
+
+@layer components {
+  /*
+   * The 45deg cut on opposing corners, from the logo cube.
+   * .cut          solid-filled elements (buttons)
+   * .cut-frame    hairline-bordered panels: 1px of --line showing around a
+   *               clipped child. clip-path eats borders, so the border is a
+   *               parent fill instead. Inner cut is pulled in 0.6px so the
+   *               diagonal hairline measures 1px like the straight edges.
+   */
+  .cut,
+  .cut-frame {
+    --c: 16px;
+    clip-path: polygon(
+      var(--c) 0, 100% 0,
+      100% calc(100% - var(--c)), calc(100% - var(--c)) 100%,
+      0 100%, 0 var(--c)
+    );
+  }
+
+  .cut-frame {
+    background: var(--line);
+    padding: 1px;
+    filter: drop-shadow(0 1px 1px rgb(11 12 14 / 0.10))
+            drop-shadow(0 14px 28px rgb(11 12 14 / 0.16));
+  }
+
+  .cut-frame > * {
+    clip-path: polygon(
+      calc(var(--c) - 0.6px) 0, 100% 0,
+      100% calc(100% - var(--c) + 0.6px), calc(100% - var(--c) + 0.6px) 100%,
+      0 100%, 0 calc(var(--c) - 0.6px)
+    );
   }
 }
 
 @layer utilities {
-  .text-gradient {
-    @apply bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent;
-  }
-
-  .bg-grid {
-    background-image: linear-gradient(to right, rgb(59 130 246 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(59 130 246 / 0.05) 1px, transparent 1px);
-    background-size: 4rem 4rem;
-  }
-
-  .bg-dot-pattern {
-    background-image: radial-gradient(circle, rgb(59 130 246 / 0.1) 1px, transparent 1px);
-    background-size: 1.5rem 1.5rem;
+  /* Faint indigo field behind the hero. Fill only, never behind text. */
+  .field-structure {
+    background: radial-gradient(
+      46rem 26rem at 16% 6%,
+      rgb(65 0 245 / 0.07),
+      transparent 70%
+    );
   }
 }
 
-@keyframes sheen {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
+/* The only animation on the page: the hero stair drawing itself in. */
+@keyframes riser {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
 }
 
-.btn-whatsapp {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(to right, #25D366, #128C7E);
+@keyframes settle {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to   { opacity: 1; transform: none; }
 }
 
-.btn-whatsapp::before {
-  content: '';
+.stair-step {
+  transform-origin: bottom;
+  animation: riser 0.34s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  animation-delay: calc(var(--i) * 70ms);
+}
+
+.settle {
+  animation: settle 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* Pointer crosshair inside the hero panel. Pointer devices only. */
+.crosshair-line {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transform: translateX(-100%);
+  background: var(--signal);
+  opacity: 0.55;
+  pointer-events: none;
 }
 
-.btn-whatsapp:hover::before {
-  animation: sheen 0.6s ease-in-out;
+@media (pointer: coarse) {
+  .crosshair-line,
+  .probe-readout {
+    display: none;
+  }
 }
 
-.btn-primary {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(to right, rgb(96 165 250), rgb(129 140 248), rgb(192 132 252));
+/* Shell prompt after the headline. */
+@keyframes blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transform: translateX(-100%);
-  z-index: 1;
+.cursor-block {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.78em;
+  margin-left: 0.18em;
+  vertical-align: baseline;
+  background: var(--signal);
+  animation: blink 1.06s steps(1) infinite;
 }
 
-.btn-primary:hover::before {
-  animation: sheen 0.6s ease-in-out;
-}
-
-.btn-primary:disabled {
-  background: rgb(63 63 70);
-  cursor: not-allowed;
-}
-
-.btn-primary:disabled::before {
-  display: none;
-}
-
-.btn-primary > * {
-  position: relative;
-  z-index: 2;
+@media (prefers-reduced-motion: reduce) {
+  .stair-step,
+  .settle,
+  .cursor-block {
+    animation: none;
+  }
 }

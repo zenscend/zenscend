@@ -7,32 +7,36 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    // No border radius anywhere. The 45deg cut in globals.css does that job.
+    borderRadius: { none: "0" },
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        border: "hsl(var(--border))",
+        ground: "#0b0c0e",
+        surface: "#121417",
+        line: "#1f2328",
+        text: "#e6e8eb",
+        dim: "#8b9198",
+        structure: "#4100f5",
+        signal: "#ff4632",
+        // light zone: the page itself. Panels stay on the dark scale above.
+        paper: "#ffffff",
+        "paper-sunk": "#f3f4f6",
+        rule: "#e2e5e9",
+        // rule is decorative only (1.26:1). Perceivable UI boundaries -- input
+        // and button borders -- need 3:1 per WCAG 1.4.11.
+        field: "#888e94",
+        ink: "#0b0c0e",
+        "ink-dim": "#5b6169",
+        // #ff4632 is only 3.40:1 on white. Same hue, darkened to 4.54:1.
+        "signal-ink": "#d93c2a",
+        // ground with 12% structure mixed in, kept opaque for cut-frame panels
+        wash: "#130b2b",
+        whatsapp: "#25d366",
+        "whatsapp-deep": "#1faa53",
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+      fontFamily: {
+        display: ["var(--font-display)", "ui-monospace", "monospace"],
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
     },
   },

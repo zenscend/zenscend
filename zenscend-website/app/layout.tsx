@@ -1,19 +1,31 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Martian_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const display = Martian_Mono({
+  subsets: ["latin"],
+  variable: "--font-display",
+});
+
+const sans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
-  title: "Zenscend Tech Solutions - Elevate Your Digital Experience",
-  description: "Modern, forward-thinking software and technology solutions that deliver clean, efficient, and scalable results for businesses in the digital space.",
-  keywords: "software development, technology solutions, digital transformation, scalable software, innovative technology",
+  title: "Zenscend — interfaces people use, systems that hold",
+  description:
+    "We are not a web shop or a mobile shop. We are developers. Whatever the problem runs on, we build it, and we run it after.",
+  keywords:
+    "software development, custom software, cloud infrastructure, DevOps, legacy modernization, technical advisory, software consultancy, Pretoria, South Africa",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
-    title: "Zenscend Tech Solutions",
-    description: "Elevate your digital experience with clean, efficient, and scalable software solutions",
+    title: "Zenscend",
+    description:
+      "Whatever the problem runs on, we build it, and we run it after.",
     type: "website",
   },
 };
@@ -25,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${display.variable} ${sans.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>
